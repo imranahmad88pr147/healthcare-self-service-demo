@@ -23,3 +23,11 @@ override.tf.json
 # Terraform CLI configuration
 .terraformrc
 terraform.rc
+
+# Python virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
