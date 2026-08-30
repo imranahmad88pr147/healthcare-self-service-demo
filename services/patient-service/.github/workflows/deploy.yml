@@ -1,0 +1,65 @@
+name: Patient Service CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r services/patient-service/requirements.txt
+
+      - name: Test health endpoint
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'services/patient-service')
+          from app import app
+
+          client = app.test_client()
+          response = client.get('/health')
+
+          assert response.status_code == 200
+          print('Health check passed!')
+          "
+
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: services/patient-service/terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
