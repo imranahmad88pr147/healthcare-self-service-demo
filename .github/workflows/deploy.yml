@@ -49,6 +49,7 @@ jobs:
         working-directory: services/patient-service/terraform
 
     
+        
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
