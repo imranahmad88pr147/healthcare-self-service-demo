@@ -8,11 +8,13 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-north-1"
+  region = "us-east-1"
 }
 
 module "app" {
   source = "../../../platform/terraform-modules/app"
 
   service_name = "patient-service"
+  environment  = "dev"
+  owner        = "healthcare-team"
 }
